@@ -17,7 +17,7 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
 {
     public static function _init()
     {
-        I18n::current_dictionary(array('nos::orm', 'nos::common'));
+        I18n::current_dictionary(array('lib_seo_metadata::common', 'nos::orm', 'nos::common'));
     }
 
     /**
