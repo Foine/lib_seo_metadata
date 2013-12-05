@@ -112,6 +112,9 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
             $this->_fields_properties[$field_property_name]['label'] = __($this->_fields_properties[$field_property_name]['label']);
             $fields[$field_name] = $this->_fields_properties[$field_property_name];
         }
+
+        if (empty($fields)) return;
+        
         $menu = array_keys($fields);
         $config['fields'] = \Arr::merge($fields, $config['fields']);
 
