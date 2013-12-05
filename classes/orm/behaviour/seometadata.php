@@ -27,6 +27,11 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
      *      seo_meta_description
      *      seo_meta_keywords
      * ),
+     * automatic_optimization_callback => array(
+     *      title
+     *      description
+     *      keywords
+     * )
      */
     protected $_properties = array();
 
@@ -75,13 +80,22 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
     {
         if ($this->_properties['fields']['seo_meta_title'] && $item->{$this->_properties['fields']['seo_meta_title']}) {
             \Nos\Nos::main_controller()->setTitle($item->{$this->_properties['fields']['seo_meta_title']});
+        } else if (method_exists($item, $this->_properties['automatic_optimization_callback']['title'])) {
+            \Nos\Nos::main_controller()->setTitle($item->{$this->_properties['automatic_optimization_callback']['title']}());
         }
+
         if ($this->_properties['fields']['seo_meta_keywords'] && $item->{$this->_properties['fields']['seo_meta_keywords']}) {
             \Nos\Nos::main_controller()->setMetaKeywords($item->{$this->_properties['fields']['seo_meta_keywords']});
+        } else if (method_exists($item, $this->_properties['automatic_optimization_callback']['keywords'])) {
+            \Nos\Nos::main_controller()->setMetaKeywords($item->{$this->_properties['automatic_optimization_callback']['keywords']}());
         }
+
         if ($this->_properties['fields']['seo_meta_description'] && $item->{$this->_properties['fields']['seo_meta_description']}) {
             \Nos\Nos::main_controller()->setMetaDescription($item->{$this->_properties['fields']['seo_meta_description']});
+        } else if (method_exists($item, $this->_properties['automatic_optimization_callback']['description'])) {
+            \Nos\Nos::main_controller()->setMetaKeywords($item->{$this->_properties['automatic_optimization_callback']['description']}());
         }
+
         if ($this->_properties['fields']['seo_meta_noindex'] && $item->{$this->_properties['fields']['seo_meta_noindex']}) {
             \Nos\Nos::main_controller()->setMetaRobots('noindex');
         }
