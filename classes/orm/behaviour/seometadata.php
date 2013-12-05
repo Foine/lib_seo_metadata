@@ -93,7 +93,7 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
         if ($this->_properties['fields']['seo_meta_description'] && $item->{$this->_properties['fields']['seo_meta_description']}) {
             \Nos\Nos::main_controller()->setMetaDescription($item->{$this->_properties['fields']['seo_meta_description']});
         } else if (method_exists($item, $this->_properties['automatic_optimization_callback']['description'])) {
-            \Nos\Nos::main_controller()->setMetaKeywords($item->{$this->_properties['automatic_optimization_callback']['description']}());
+            \Nos\Nos::main_controller()->setMetaDescription($item->{$this->_properties['automatic_optimization_callback']['description']}());
         }
 
         if ($this->_properties['fields']['seo_meta_noindex'] && $item->{$this->_properties['fields']['seo_meta_noindex']}) {
@@ -114,7 +114,7 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
         }
 
         if (empty($fields)) return;
-        
+
         $menu = array_keys($fields);
         $config['fields'] = \Arr::merge($fields, $config['fields']);
 
