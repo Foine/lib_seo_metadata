@@ -69,6 +69,16 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
     public function __construct($class)
     {
         parent::__construct($class);
+        $this->_properties = \Arr::merge(
+            array(
+                'automatic_optimization_callback' => array(
+                    'title' => '',
+                    'description' => '',
+                    'keywords' => '',
+                ),
+            ),
+            $this->_properties
+        );
     }
 
     /**
