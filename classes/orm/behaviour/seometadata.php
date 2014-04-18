@@ -112,8 +112,9 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
     }
     public function crudConfig(&$config, $crud)
     {
-        if (!is_array($this->_properties['fields'])) {
-            $this->_properties['fields'] = array();
+        if (!is_array(\Arr::get($this->_properties,'fields'))) {
+            \Log::info(__('"fields" property on behaviour SeoMetadata should be an array.'));
+            return;
         }
         $fields = array();
         foreach ($this->_properties['fields'] as $field_property_name => $field_name) {
@@ -135,7 +136,28 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
                         if (!isset($config[$layout_name][$name]['params'])) {
                             $config[$layout_name][$name]['params'] = array();
                         }
-                        $config[$layout_name][$name]['params']['menu'][__('SEO')] = $menu;
+                        $is_extended = false;
+                        if (!empty($config[$layout_name][$name]['params']['menu']) && is_array($config[$layout_name][$name]['params']['menu'])) {
+                            //get the last key to reinsert with it
+                            end($config[$layout_name][$name]['params']['menu']);
+                            $key = key($config[$layout_name][$name]['params']['menu']);
+                            $last_menu = array_pop($config[$layout_name][$name]['params']['menu']);
+                            if (is_array($last_menu) && !empty($last_menu['view'])) {
+                                $is_extended = true; //prevent from inserting some unused configuration
+                                if (!empty($last_menu['params']) && isset($last_menu['params']['accordions'])) {
+                                    //if the menu is using accordions
+                                    $last_menu['params']['accordions']['seo_fields'] = array(
+                                        'title' => __('SEO'),
+                                        'fields' => $menu,
+                                    );
+                                }
+                            }
+                            //does not modify config wether the extended config has been added or not
+                            $config[$layout_name][$name]['params']['menu'][$key] = $last_menu;
+                        }
+                        if (!$is_extended) {
+                            $config[$layout_name][$name]['params']['menu'][__('SEO')] = $menu;
+                        }
                         break;
                     }
                 }
