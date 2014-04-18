@@ -112,8 +112,9 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
     }
     public function crudConfig(&$config, $crud)
     {
-        if (!is_array($this->_properties['fields'])) {
-            $this->_properties['fields'] = array();
+        if (!is_array(\Arr::get($this->_properties,'fields'))) {
+            \Log::info(__('"fields" property on behaviour SeoMetadata should be an array.'));
+            return;
         }
         $fields = array();
         foreach ($this->_properties['fields'] as $field_property_name => $field_name) {
