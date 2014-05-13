@@ -14,6 +14,7 @@ return array(
     'provider' => array(
         'name' => 'Novius Agency',
     ),
+    'extends' => array('noviusos_page'),
     'namespace' => 'Lib\SEO\Metadata',
     'icons' => array(
         16 => '/static/apps/lib_seo_metadata/img/icon-16.png',
