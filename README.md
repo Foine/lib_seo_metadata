@@ -11,6 +11,8 @@ Current version: 1.0
 
 * Install the application
 * Add the behaviour in the model that you want to have seo fields like this :
+
+```
     protected static $_behaviours = array(
         'Lib\SEO\Metadata\Orm_Behaviour_SeoMetadata' => array(
             'fields' => array(
@@ -21,9 +23,12 @@ Current version: 1.0
             ),
         ),
     );
+```
+
 
 * Do not forget to add your fields into your model properties and in your database. All fields are text or varchar, except of the no index field that is a boolean.
 * This app normaly automacally insert your seo metadata in Front Office if your Front Controller use the "setItemDisplayed" system provide by the Front Controller of NOS.
 * If you want to use them manually, just call `$item->setSeoMetadata();` into your front action, and the behaviour will do the job !
+* This behaviour can also allow you to set automatic seo optimization. it will be documented soon.
 
 Thank you for using this application !
