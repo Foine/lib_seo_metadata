@@ -69,6 +69,15 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
     public function __construct($class)
     {
         parent::__construct($class);
+
+        //Retrieve custom field properties for CRUD display.
+        $this->_fields_properties = \Arr::merge(
+            $this->_fields_properties,
+            \Arr::get($this->_properties, 'fields_properties', array())
+        );
+        \Arr::delete($this->_properties, 'fields_properties');
+
+        //Set default options to avoid warnings
         $this->_properties = \Arr::merge(
             array(
                 'automatic_optimization_callback' => array(
