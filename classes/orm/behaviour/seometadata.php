@@ -99,8 +99,13 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
     {
         if (isset($this->_properties['fields']['seo_meta_title']) && $item->{$this->_properties['fields']['seo_meta_title']}) {
             \Nos\Nos::main_controller()->setTitle($item->{$this->_properties['fields']['seo_meta_title']});
-        } else if (isset($this->_properties['automatic_optimization_callback']['title']) && method_exists($item, $this->_properties['automatic_optimization_callback']['title'])) {
-            \Nos\Nos::main_controller()->setTitle($item->{$this->_properties['automatic_optimization_callback']['title']}());
+        } else if (isset($this->_properties['automatic_optimization_callback']['title'])) {
+            if (method_exists($item, $this->_properties['automatic_optimization_callback']['title'])) {
+                $title = $item->{$this->_properties['automatic_optimization_callback']['title']}();
+            } else if (is_callable($this->_properties['automatic_optimization_callback']['title'])) {
+                $title = call_user_func_array($this->_properties['automatic_optimization_callback']['title'], array('item' => $item));
+            }
+            \Nos\Nos::main_controller()->setTitle($title);
         }
 
         if (isset($this->_properties['fields']['seo_meta_keywords']) && $item->{$this->_properties['fields']['seo_meta_keywords']}) {
