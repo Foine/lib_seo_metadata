@@ -100,30 +100,49 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
         if (isset($this->_properties['fields']['seo_meta_title']) && $item->{$this->_properties['fields']['seo_meta_title']}) {
             \Nos\Nos::main_controller()->setTitle($item->{$this->_properties['fields']['seo_meta_title']});
         } else if (isset($this->_properties['automatic_optimization_callback']['title'])) {
-            if (method_exists($item, $this->_properties['automatic_optimization_callback']['title'])) {
-                $title = $item->{$this->_properties['automatic_optimization_callback']['title']}();
-            } else if (is_callable($this->_properties['automatic_optimization_callback']['title'])) {
-                $title = call_user_func_array($this->_properties['automatic_optimization_callback']['title'], array('item' => $item));
+            $value = $this->getValueFromFunction($this->_properties['automatic_optimization_callback']['title'], $item);
+            if ($value !== false) {
+                \Nos\Nos::main_controller()->setTitle($value);
             }
-            \Nos\Nos::main_controller()->setTitle($title);
         }
 
         if (isset($this->_properties['fields']['seo_meta_keywords']) && $item->{$this->_properties['fields']['seo_meta_keywords']}) {
             \Nos\Nos::main_controller()->setMetaKeywords($item->{$this->_properties['fields']['seo_meta_keywords']});
-        } else if (isset($this->_properties['automatic_optimization_callback']['keywords']) && method_exists($item, $this->_properties['automatic_optimization_callback']['keywords'])) {
-            \Nos\Nos::main_controller()->setMetaKeywords($item->{$this->_properties['automatic_optimization_callback']['keywords']}());
+        } else if (isset($this->_properties['automatic_optimization_callback']['keywords'])) {
+            $value = $this->getValueFromFunction($this->_properties['automatic_optimization_callback']['keywords'], $item);
+            if ($value !== false) {
+                \Nos\Nos::main_controller()->setMetaKeywords($value);
+            }
         }
 
         if (isset($this->_properties['fields']['seo_meta_description']) && $item->{$this->_properties['fields']['seo_meta_description']}) {
             \Nos\Nos::main_controller()->setMetaDescription($item->{$this->_properties['fields']['seo_meta_description']});
-        } else if (isset($this->_properties['automatic_optimization_callback']['description']) && method_exists($item, $this->_properties['automatic_optimization_callback']['description'])) {
-            \Nos\Nos::main_controller()->setMetaDescription($item->{$this->_properties['automatic_optimization_callback']['description']}());
+        } else if (isset($this->_properties['automatic_optimization_callback']['description'])) {
+            $value = $this->getValueFromFunction($this->_properties['automatic_optimization_callback']['description'], $item);
+            if ($value !== false) {
+                \Nos\Nos::main_controller()->setMetaDescription($value);
+            }
         }
 
         if (isset($this->_properties['fields']['seo_meta_noindex']) && $item->{$this->_properties['fields']['seo_meta_noindex']}) {
-            \Nos\Nos::main_controller()->setMetaRobots('noindex');
+            if ($value !== false) {
+                \Nos\Nos::main_controller()->setMetaRobots('noindex');
+            }
         }
     }
+
+    protected function getValueFromFunction($function_name, \Nos\Orm\Model $item)
+    {
+        $value = false;
+        if (method_exists($item, $function_name)) {
+            $value = $item->{$function_name}();
+        } else if (is_callable($function_name)) {
+            $value = call_user_func_array($function_name, array('item' => $item));
+        }
+
+        return $value;
+    }
+
     public function crudConfig(&$config, $crud)
     {
         if (!is_array(\Arr::get($this->_properties,'fields'))) {
