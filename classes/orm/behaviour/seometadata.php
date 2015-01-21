@@ -131,13 +131,13 @@ class Orm_Behaviour_SeoMetadata extends Orm_Behaviour
         }
     }
 
-    protected function getValueFromFunction($function_name, \Nos\Orm\Model $item)
+    protected function getValueFromFunction($function, \Nos\Orm\Model $item)
     {
         $value = false;
-        if (method_exists($item, $function_name)) {
-            $value = $item->{$function_name}();
-        } else if (is_callable($function_name)) {
-            $value = call_user_func_array($function_name, array('item' => $item));
+        if (is_string($function) && method_exists($item, $function)) {
+            $value = $item->{$function}();
+        } else if (is_callable($function)) {
+            $value = call_user_func_array($function, array('item' => $item));
         }
 
         return $value;
