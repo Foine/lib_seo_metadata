@@ -63,8 +63,49 @@ Current version: 1.0
     ;
 ```
 
+**Another method : automatic optimization callback**
+
+This behaviour can also allow you to set automatic seo optimization. This option can be used with or without the classical SEO fields.
+If fields are used and filled, automatic optimization will do nothing. But if there is no field or if the field is empty, automatic optimization will be used.
+Here is 2 configuration samples :
+
+```
+    protected static $_behaviours = array(
+        'Lib\SEO\Metadata\Orm_Behaviour_SeoMetadata' => array(
+            'automatic_optimization_callback' => array(
+                'title'         => 'seo_title',
+                'description'   => 'seo_description',
+                'keywords'      => 'seo_keywords',
+            ),
+        ),
+    );
+
+```
+With this one, the behaviour will try to call public methods `seo_title`, `seo_description` and `seo_keywords` into the current Model. Those methods must return strings that will be used into you seo metadata.
+The second example do the same thing but use anonymous function that take the current model as argument.
+
+```
+
+    public static function _init()
+    {
+        self::$_behaviours['Lib\SEO\Metadata\Orm_Behaviour_SeoMetadata'] = array(
+            'automatic_optimization_callback' => array(
+                'title'         => function($item) {
+                        return __('My enhanced title for ').$item->title_item();
+                    },
+                'description'   => function($item) {
+                       return __('My enhanced description for ').$item->title_item();
+                   },
+                'keywords'      => function($item) {
+                       return 'keywords, used, for, '.$item->title_item();
+                   },
+            ),
+        );
+    }
+
+```
+
 * This app automatically insert your seo metadata in Front Office if your Front Controller use the "setItemDisplayed" method provided by the Front Controller of NOS.
 * If you want to use them manually, just call `$item->setSeoMetadata();` into your front action, and the behaviour will do the job !
-* This behaviour can also allow you to set automatic seo optimization. it will be documented soon.
 
 Thank you for using this application !
